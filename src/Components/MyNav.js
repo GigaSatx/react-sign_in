@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import React, { Component } from "react";
 import SearchIcon from "@mui/icons-material/Search";
+import { ThemeContext } from "../Contexts/ThemeContext";
+import { withLanguageContext } from "../Contexts/LanguageContext";
 
 const RootStyles = styled("div")(({ theme }) => ({
   width: "100%",
@@ -74,26 +76,23 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 class MyNav extends Component {
   constructor(props) {
     super(props);
-    this.state = { auth: false };
-    this.handleChange = this.handleChange.bind(this);
   }
+  static contextType = ThemeContext;
 
-  handleChange = (event) => {
-    this.setState({ auth: event.target.checked });
-  };
   render() {
+    const { isDarkMode, toggleTheme } = this.context;
+    const { languages } = this.props.languageContext;
     return (
       <RootStyles>
-        <AppBar position="static" color="primary">
+        <AppBar position="static" color={isDarkMode ? "primary" : "default"}>
           <Toolbar>
             <MenuButtonStyles>
               <span>rocket league</span>
             </MenuButtonStyles>
-            <TitleStyles>App title</TitleStyles>
+            <TitleStyles>{languages}</TitleStyles>
             <Switch
               color="warning"
-              checked={this.state.auth}
-              onChange={this.handleChange}
+              onChange={toggleTheme}
               aria-label="login switch"
             />
             <div style={{ flexGrow: "1" }} />
@@ -112,4 +111,4 @@ class MyNav extends Component {
     );
   }
 }
-export default MyNav;
+export default withLanguageContext(MyNav);
