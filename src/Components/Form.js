@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -35,12 +35,11 @@ const words = {
   },
 };
 
-export default class SignIn extends Component {
-  static contextType = LanguageContext;
-  constructor(props) {
-    super(props);
-  }
-  handleSubmit = (event) => {
+export default function SignIn(props) {
+  const { languages, changeLanguage } = useContext(LanguageContext);
+  const { email, password, signin, remember } = words[languages];
+
+  const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
@@ -48,96 +47,88 @@ export default class SignIn extends Component {
       password: data.get("password"),
     });
   };
-  render() {
-    const { languages, changeLanguage } = this.context;
-    const { email, password, signin, remember } = words[languages];
-    return (
-      <Card
-        elevation={10}
-        sx={{ maxWidth: 450 }}
-        style={{ margin: "2rem auto" }}
-      >
-        <CardContent>
-          <Container component="main">
-            <CssBaseline />
-            <Box
-              sx={{
-                marginTop: 1,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
+  return (
+    <Card elevation={10} sx={{ maxWidth: 450 }} style={{ margin: "2rem auto" }}>
+      <CardContent>
+        <Container component="main">
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              {signin}
+            </Typography>
+            <Select
+              value={languages}
+              onChange={changeLanguage}
+              sx={{ height: "2rem", marginTop: "0.5rem" }}
             >
-              <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5">
+              <MenuItem value="english">English</MenuItem>
+              <MenuItem value="hindi">Hindi</MenuItem>
+              <MenuItem value="french">French</MenuItem>
+            </Select>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 1 }}
+            >
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label={email}
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label={password}
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label={remember}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
                 {signin}
-              </Typography>
-              <Select
-                value={languages}
-                onChange={changeLanguage}
-                sx={{ height: "2rem", marginTop: "0.5rem" }}
-              >
-                <MenuItem value="english">English</MenuItem>
-                <MenuItem value="hindi">Hindi</MenuItem>
-                <MenuItem value="french">French</MenuItem>
-              </Select>
-              <Box
-                component="form"
-                onSubmit={this.handleSubmit}
-                noValidate
-                sx={{ mt: 1 }}
-              >
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label={email}
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label={password}
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-                <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label={remember}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  {signin}
-                </Button>
-                <Grid container>
-                  <Grid item xs>
-                    <Link href="#" variant="body2">
-                      Forgot password?
-                    </Link>
-                  </Grid>
-                  <Grid item>
-                    <Link href="#" variant="body2">
-                      {"Don't have an account? Sign Up"}
-                    </Link>
-                  </Grid>
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
                 </Grid>
-              </Box>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
             </Box>
-          </Container>
-        </CardContent>
-      </Card>
-    );
-  }
+          </Box>
+        </Container>
+      </CardContent>
+    </Card>
+  );
 }

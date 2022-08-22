@@ -9,10 +9,10 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import React, { Component } from "react";
+import React, { useContext } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { ThemeContext } from "../Contexts/ThemeContext";
-import { withLanguageContext } from "../Contexts/LanguageContext";
+import { LanguageContext } from "../Contexts/LanguageContext";
 
 const RootStyles = styled("div")(({ theme }) => ({
   width: "100%",
@@ -73,42 +73,36 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-class MyNav extends Component {
-  constructor(props) {
-    super(props);
-  }
-  static contextType = ThemeContext;
-
-  render() {
-    const { isDarkMode, toggleTheme } = this.context;
-    const { languages } = this.props.languageContext;
-    return (
-      <RootStyles>
-        <AppBar position="static" color={isDarkMode ? "primary" : "default"}>
-          <Toolbar>
-            <MenuButtonStyles>
-              <span>rocket league</span>
-            </MenuButtonStyles>
-            <TitleStyles>{languages}</TitleStyles>
-            <Switch
-              color="warning"
-              onChange={toggleTheme}
-              aria-label="login switch"
+function MyNav(props) {
+  const { languages, changeLanguage } = useContext(LanguageContext);
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+  // const { languages } = this.props.languageContext;
+  return (
+    <RootStyles>
+      <AppBar position="static" color={isDarkMode ? "primary" : "default"}>
+        <Toolbar>
+          <MenuButtonStyles>
+            <span>rocket league</span>
+          </MenuButtonStyles>
+          <TitleStyles>{languages}</TitleStyles>
+          <Switch
+            color="warning"
+            onChange={toggleTheme}
+            aria-label="login switch"
+          />
+          <div style={{ flexGrow: "1" }} />
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
             />
-            <div style={{ flexGrow: "1" }} />
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
-            </Search>
-          </Toolbar>
-        </AppBar>
-      </RootStyles>
-    );
-  }
+          </Search>
+        </Toolbar>
+      </AppBar>
+    </RootStyles>
+  );
 }
-export default withLanguageContext(MyNav);
+export default MyNav;
